@@ -6,9 +6,9 @@ replicaCount: 1
 otel:
   image:
     repositoryPath: otel/opentelemetry-collector-contrib
-    tag: 0.130.1
+    tag: 0.155.0
 otelDynamicConfigurer:
   image:
     repositoryPath: akshnevrekar/otel-dynamic-configurer
-    tag: 0.130.1
+    tag: 0.155.0
 

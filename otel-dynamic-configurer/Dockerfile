@@ -12,7 +12,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and install otelcol-contrib
-ENV OTELCOL_VERSION=0.130.1
+ENV OTELCOL_VERSION=0.155.0
 RUN curl -LO https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${OTELCOL_VERSION}/otelcol-contrib_${OTELCOL_VERSION}_linux_amd64.tar.gz && \
     tar -xzf otelcol-contrib_${OTELCOL_VERSION}_linux_amd64.tar.gz && \
     mv otelcol-contrib /usr/local/bin/otelcol-contrib && \

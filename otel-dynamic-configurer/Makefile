@@ -1,6 +1,6 @@
 SERVICE_NAME=otel-dynamic-configurer
 
-VERSION=0.130.1
+VERSION=0.155.0
 DOCKER_IMAGE_PATH = akshnevrekar/${SERVICE_NAME}:${VERSION}
 DOCKERFILE = Dockerfile
 
