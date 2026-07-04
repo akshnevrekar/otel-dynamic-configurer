@@ -1,0 +1,14 @@
+# Default values for helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+otel:
+  image:
+    repositoryPath: otel/opentelemetry-collector-contrib
+    tag: 0.130.1
+otelDynamicConfigurer:
+  image:
+    repositoryPath: akshnevrekar/otel-dynamic-configurer
+    tag: 0.130.1
+

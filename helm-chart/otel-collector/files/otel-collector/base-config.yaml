@@ -1,0 +1,25 @@
+receivers:
+  # The nop (no-op) receiver does absolutely nothing, keeping your collector completely quiet.
+  nop:
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    metrics:
+      receivers: [nop]
+      processors: [batch]
+      exporters: [debug]
+    logs:
+      receivers: [nop]
+      processors: [batch]
+      exporters: [debug]
+    traces:
+      receivers: [nop]
+      processors: [batch]
+      exporters: [debug]

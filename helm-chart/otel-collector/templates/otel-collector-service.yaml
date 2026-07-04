@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: otel-collector
+  name: otel-collector
+spec:
+  ports:
+    - name: config-api
+      port: 8000
+      targetPort: config-api
+  selector:
+    app: otel-collector
+  type: ClusterIP
+status:
+  loadBalancer: {}

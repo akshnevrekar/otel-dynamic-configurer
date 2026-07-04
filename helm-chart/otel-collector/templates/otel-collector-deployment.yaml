@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: otel-collector
+  name: otel-collector
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: otel-collector
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: otel-collector
+    spec:
+      shareProcessNamespace: true
+      initContainers:
+        - name: otel-init-configurer
+          image: "{{ .Values.otelDynamicConfigurer.image.repositoryPath }}:{{ .Values.otelDynamicConfigurer.image.tag }}"
+          command: ["/bin/sh", "-c"]
+          args: ["/init_container.sh"]
+          volumeMounts:
+            - mountPath: /otel-collector/etc
+              name: otel-collector-base-config
+            - mountPath: /pvc-config-storage
+              name: otel-collector-config
+          env:
+            - name: BASE_FIXED_CONFIG
+              value: "/otel-collector/etc/base-config.yaml"
+            - name: BASE_DYNAMIC_CONFIG
+              value: "/otel-collector/etc/base-dynamic-config.yaml"
+            - name: DYNAMIC_CONFIG
+              value: "/pvc-config-storage/dynamic-config.yaml"
+      containers:
+        - name: otel-collector
+          image: "{{ .Values.otel.image.repositoryPath }}:{{ .Values.otel.image.tag }}"
+          args: ["--config=/otel-collector/etc/base-config.yaml", "--config=/pvc-config-storage/dynamic-config.yaml"]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+              ephemeral-storage: 1000Mi
+          volumeMounts:
+            - mountPath: /otel-collector/etc
+              name: otel-collector-base-config
+            - mountPath: /pvc-config-storage
+              name: otel-collector-config
+        - name: otel-dynamic-configurer
+          image: "{{ .Values.otelDynamicConfigurer.image.repositoryPath }}:{{ .Values.otelDynamicConfigurer.image.tag }}"
+          ports:
+            - containerPort: 8000
+              name: config-api
+          volumeMounts:
+            - mountPath: /otel-collector/etc
+              name: otel-collector-base-config
+            - mountPath: /pvc-config-storage
+              name: otel-collector-config
+          env:
+            - name: BASE_FIXED_CONFIG
+              value: "/otel-collector/etc/base-config.yaml"
+            - name: BASE_DYNAMIC_CONFIG
+              value: "/otel-collector/etc/base-dynamic-config.yaml"
+            - name: DYNAMIC_CONFIG
+              value: "/pvc-config-storage/dynamic-config.yaml"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+            limits:
+              cpu: 100m
+              memory: 200Mi
+      restartPolicy: Always
+      volumes:
+        - name: otel-collector-base-config
+          configMap:
+            name: otel-collector-base-config
+        - name: otel-collector-config
+          persistentVolumeClaim:
+            claimName: otel-collector-config

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # Increment the name suffix and update the fluentd-deployment.yaml
+  # everytime the configmap (i.e. files/fluentd.conf) is changed.
+  # This is because configmap's are immutable and the pods do not
+  # restart if configmap is changed unless the deployment itself changes.
+  name: otel-collector-base-config
+data:
+  {{- (.Files.Glob "files/otel-collector/*").AsConfig | nindent 2 }}

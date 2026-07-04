@@ -1,0 +1,10 @@
+# DO NOT MODIFY THIS FILE.
+# IT GETS OVERWRITTEN BY THE OTEL CONFIGURER.
+receivers: {}
+
+extensions: {}
+
+exporters:
+  nop: {}
+
+service: {}
